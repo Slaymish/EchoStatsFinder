@@ -9,6 +9,8 @@ If using quest:
  - Ensure you have API turned on in settings
  - Make sure you are on the same network as your quest
 
+If using PC:
+ - Keep ip.txt as 127.0.0.1
 
 To view VRML team stats of people in your pubs run:
 python pubstats.py
