@@ -20,7 +20,7 @@ def find_names():
 
         url_request = requests.get(echo_url, timeout=5)
     except:
-        print("Could not connect to session")
+        print("Could not connect to session - Ensure echo is open")
         stop = True
     
     if not stop:
