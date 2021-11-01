@@ -15,8 +15,8 @@ To setup GUI:
 
 ---------------------
 
-To view VRML team stats of people in your pubs run:
-python pubstats.py
+To view VRML team stats of people in your pubs:
+Double click Run-GUI.bat **OR** run python pubstats.py
 
 **You have to have echo open for this to work**
 
