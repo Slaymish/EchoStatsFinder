@@ -23,6 +23,7 @@ If using PC:
  - Have api on in echo settings
 
 To view VRML team stats of people in your pubs run:
+**You have to have echo open for this to work**
 python pubstats.py
 
 To search for VRML team stats from username run: python gui.py *or* python vrmlplayersearcher.py
