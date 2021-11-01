@@ -7,7 +7,7 @@ from vrmlplayersearcher import *
 class Ui_Widget(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
-        Widget.resize(575, 358)
+        Widget.resize(575, 150)
         
         # Centre line
         self.line = QtWidgets.QFrame(Widget)
@@ -40,6 +40,9 @@ class Ui_Widget(object):
         # Search player button
         self.searchButton = QtWidgets.QPushButton(Widget)
         self.searchButton.setGeometry(QtCore.QRect(300, 100, 101, 21))
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        self.searchButton.setFont(font)
         self.searchButton.setFlat(False)
         self.searchButton.setObjectName("searchButton")
         self.searchButton.clicked.connect(self.searchForVRMLPlayer)
@@ -47,7 +50,7 @@ class Ui_Widget(object):
 
         # Team name label
         self.label_3 = QtWidgets.QLabel(Widget)
-        self.label_3.setGeometry(QtCore.QRect(410, 40, 71, 16))
+        self.label_3.setGeometry(QtCore.QRect(410, 40, 80, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
@@ -56,14 +59,14 @@ class Ui_Widget(object):
 
         # Team name output
         self.teamNameLabel = QtWidgets.QLabel(Widget)
-        self.teamNameLabel.setGeometry(QtCore.QRect(485, 40, 71, 16))
+        self.teamNameLabel.setGeometry(QtCore.QRect(494, 40, 71, 16))
         font = QtGui.QFont()
         self.teamNameLabel.setFont(font)
         self.teamNameLabel.setObjectName("teamNameLabel")
 
         # Worldwide rank label
         self.label_4 = QtWidgets.QLabel(Widget)
-        self.label_4.setGeometry(QtCore.QRect(410, 70, 101, 16))
+        self.label_4.setGeometry(QtCore.QRect(410, 70, 108, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
@@ -72,14 +75,14 @@ class Ui_Widget(object):
 
         # Worldwide rank output
         self.rankingLabel = QtWidgets.QLabel(Widget)
-        self.rankingLabel.setGeometry(QtCore.QRect(506, 70, 71, 16))
+        self.rankingLabel.setGeometry(QtCore.QRect(520, 70, 71, 16))
         font = QtGui.QFont()
         self.rankingLabel.setFont(font)
         self.rankingLabel.setObjectName("rankingLabel")
 
         # Division label
         self.label_5 = QtWidgets.QLabel(Widget)
-        self.label_5.setGeometry(QtCore.QRect(410, 100, 51, 16))
+        self.label_5.setGeometry(QtCore.QRect(410, 100, 55, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
@@ -88,7 +91,7 @@ class Ui_Widget(object):
         
         # Division output
         self.divisionLabel = QtWidgets.QLabel(Widget)
-        self.divisionLabel.setGeometry(QtCore.QRect(460, 100, 71, 16))
+        self.divisionLabel.setGeometry(QtCore.QRect(470, 100, 71, 16))
         font = QtGui.QFont()
         self.divisionLabel.setFont(font)
         self.divisionLabel.setObjectName("divisionLabel")
@@ -100,7 +103,7 @@ class Ui_Widget(object):
         self.progressBar.setObjectName("progressBar")
 
 
-        ### Unlabelled UI Elements, not completed yet!
+        ### For Pubs stats, not completed yet!
 
         # Player pub stats label
         self.label_6 = QtWidgets.QLabel(Widget)
@@ -125,7 +128,7 @@ class Ui_Widget(object):
 
         # 'Leave blank for pc' label
         self.label_8 = QtWidgets.QLabel(Widget)
-        self.label_8.setGeometry(QtCore.QRect(90, 40, 101, 16))
+        self.label_8.setGeometry(QtCore.QRect(90, 40, 130, 16))
         self.label_8.setObjectName("label_8")
 
         # Pub search button
@@ -137,21 +140,30 @@ class Ui_Widget(object):
 
         # 'Current not' label
         self.label_9 = QtWidgets.QLabel(Widget)
-        self.label_9.setGeometry(QtCore.QRect(160, 70, 91, 16))
+        self.label_9.setGeometry(QtCore.QRect(140, 70, 115, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
         self.label_9.setFont(font)
         self.label_9.setObjectName("label_9")
-        
+
         # 'Finished yet' label
         self.label_10 = QtWidgets.QLabel(Widget)
-        self.label_10.setGeometry(QtCore.QRect(170, 80, 91, 16))
+        self.label_10.setGeometry(QtCore.QRect(140, 82, 110, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
         self.label_10.setFont(font)
         self.label_10.setObjectName("label_10")
+
+        # '(Output in CLI)' label
+        self.label_11 = QtWidgets.QLabel(Widget)
+        self.label_11.setGeometry(QtCore.QRect(140, 94, 110, 16))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_11.setFont(font)
+        self.label_11.setObjectName("label_11")
 
         self.foundTeamName = ""
         self.foundRanking = ""
@@ -163,7 +175,7 @@ class Ui_Widget(object):
 
     def retranslateUi(self, Widget):
         _translate = QtCore.QCoreApplication.translate
-        Widget.setWindowTitle(_translate("Widget", "Widget"))
+        Widget.setWindowTitle(_translate("Widget", "Pub and Player Searcher"))
         self.label.setText(_translate("Widget", "VRML Player Searcher"))
         self.label_2.setText(_translate("Widget", "Username"))
         self.searchButton.setText(_translate("Widget", "Search for Player"))
@@ -178,7 +190,9 @@ class Ui_Widget(object):
         self.label_8.setText(_translate("Widget", "(leave blank if on PC)"))
         self.searchButton_2.setText(_translate("Widget", "Begin Search"))
         self.label_9.setText(_translate("Widget", "CURRENTLY NOT"))
-        self.label_10.setText(_translate("Widget", "FINISHED YET."))
+        self.label_10.setText(_translate("Widget", "FINISHED YET"))
+        self.label_11.setText(_translate("Widget", "(Outputs in CLI)"))
+
     
     def searchForVRMLPlayer(self):
         self.playerName = self.usernameInput.toPlainText()
