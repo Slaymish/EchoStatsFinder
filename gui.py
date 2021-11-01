@@ -7,14 +7,16 @@ from vrmlplayersearcher import *
 class Ui_Widget(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
-        Widget.resize(575, 158)
-
+        Widget.resize(575, 358)
+        
+        # Centre line
         self.line = QtWidgets.QFrame(Widget)
         self.line.setGeometry(QtCore.QRect(270, 0, 21, 391))
         self.line.setFrameShape(QtWidgets.QFrame.VLine)
         self.line.setFrameShadow(QtWidgets.QFrame.Sunken)
         self.line.setObjectName("line")
         
+        # VRML PLayer Searcher Label
         self.label = QtWidgets.QLabel(Widget)
         self.label.setGeometry(QtCore.QRect(300, 0, 351, 41))
         font = QtGui.QFont()
@@ -22,6 +24,7 @@ class Ui_Widget(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
 
+        # Username label
         self.label_2 = QtWidgets.QLabel(Widget)
         self.label_2.setGeometry(QtCore.QRect(300, 40, 81, 16))
         font = QtGui.QFont()
@@ -29,16 +32,20 @@ class Ui_Widget(object):
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
 
+        # Username input
         self.usernameInput = QtWidgets.QTextEdit(Widget)
         self.usernameInput.setGeometry(QtCore.QRect(300, 60, 101, 31))
         self.usernameInput.setObjectName("usernameInput")
 
+        # Search player button
         self.searchButton = QtWidgets.QPushButton(Widget)
         self.searchButton.setGeometry(QtCore.QRect(300, 100, 101, 21))
         self.searchButton.setFlat(False)
         self.searchButton.setObjectName("searchButton")
         self.searchButton.clicked.connect(self.searchForVRMLPlayer)
 
+
+        # Team name label
         self.label_3 = QtWidgets.QLabel(Widget)
         self.label_3.setGeometry(QtCore.QRect(410, 40, 71, 16))
         font = QtGui.QFont()
@@ -47,12 +54,14 @@ class Ui_Widget(object):
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
 
+        # Team name output
         self.teamNameLabel = QtWidgets.QLabel(Widget)
         self.teamNameLabel.setGeometry(QtCore.QRect(485, 40, 71, 16))
         font = QtGui.QFont()
         self.teamNameLabel.setFont(font)
         self.teamNameLabel.setObjectName("teamNameLabel")
 
+        # Worldwide rank label
         self.label_4 = QtWidgets.QLabel(Widget)
         self.label_4.setGeometry(QtCore.QRect(410, 70, 101, 16))
         font = QtGui.QFont()
@@ -61,12 +70,14 @@ class Ui_Widget(object):
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
 
+        # Worldwide rank output
         self.rankingLabel = QtWidgets.QLabel(Widget)
         self.rankingLabel.setGeometry(QtCore.QRect(506, 70, 71, 16))
         font = QtGui.QFont()
         self.rankingLabel.setFont(font)
         self.rankingLabel.setObjectName("rankingLabel")
 
+        # Division label
         self.label_5 = QtWidgets.QLabel(Widget)
         self.label_5.setGeometry(QtCore.QRect(410, 100, 51, 16))
         font = QtGui.QFont()
@@ -75,12 +86,14 @@ class Ui_Widget(object):
         self.label_5.setFont(font)
         self.label_5.setObjectName("label_5")
         
+        # Division output
         self.divisionLabel = QtWidgets.QLabel(Widget)
         self.divisionLabel.setGeometry(QtCore.QRect(460, 100, 71, 16))
         font = QtGui.QFont()
         self.divisionLabel.setFont(font)
         self.divisionLabel.setObjectName("divisionLabel")
 
+        # Progress bar (Playersearcher)
         self.progressBar = QtWidgets.QProgressBar(Widget)
         self.progressBar.setGeometry(QtCore.QRect(300, 130, 101, 23))
         self.progressBar.setProperty("value", 0)
@@ -88,6 +101,8 @@ class Ui_Widget(object):
 
 
         ### Unlabelled UI Elements, not completed yet!
+
+        # Player pub stats label
         self.label_6 = QtWidgets.QLabel(Widget)
         self.label_6.setGeometry(QtCore.QRect(10, 0, 201, 41))
         font = QtGui.QFont()
@@ -95,6 +110,7 @@ class Ui_Widget(object):
         self.label_6.setFont(font)
         self.label_6.setObjectName("label_6")
 
+        # IP address label
         self.label_7 = QtWidgets.QLabel(Widget)
         self.label_7.setGeometry(QtCore.QRect(10, 40, 81, 16))
         font = QtGui.QFont()
@@ -107,17 +123,19 @@ class Ui_Widget(object):
         self.IpInput.setGeometry(QtCore.QRect(10, 60, 101, 31))
         self.IpInput.setObjectName("IpInput")
 
+        # 'Leave blank for pc' label
         self.label_8 = QtWidgets.QLabel(Widget)
         self.label_8.setGeometry(QtCore.QRect(90, 40, 101, 16))
         self.label_8.setObjectName("label_8")
 
+        # Pub search button
         self.searchButton_2 = QtWidgets.QPushButton(Widget)
         self.searchButton_2.setGeometry(QtCore.QRect(10, 100, 101, 21))
         self.searchButton_2.setFlat(False)
         self.searchButton_2.setObjectName("searchButton_2")
         self.searchButton_2.clicked.connect(self.searchPub)
 
-
+        # 'Current not' label
         self.label_9 = QtWidgets.QLabel(Widget)
         self.label_9.setGeometry(QtCore.QRect(160, 70, 91, 16))
         font = QtGui.QFont()
@@ -125,7 +143,8 @@ class Ui_Widget(object):
         font.setWeight(75)
         self.label_9.setFont(font)
         self.label_9.setObjectName("label_9")
-
+        
+        # 'Finished yet' label
         self.label_10 = QtWidgets.QLabel(Widget)
         self.label_10.setGeometry(QtCore.QRect(170, 80, 91, 16))
         font = QtGui.QFont()
