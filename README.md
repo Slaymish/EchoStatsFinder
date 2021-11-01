@@ -1,4 +1,4 @@
-# VRMLPlayerSearch
+# VRML Team Stat Searcher
 
 Displays Team Name, Team Rank (Worldwide), and tier of all the players in your pubs.
 
