@@ -16,8 +16,10 @@ To use GUI:
 ---------------------
 
 To view VRML team stats of people in your pubs run:
-**You have to have echo open for this to work**
 python pubstats.py
+
+**You have to have echo open for this to work**
+
 
 If using quest:
  - Put the ip in ip.txt with your quest ip
