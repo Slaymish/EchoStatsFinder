@@ -32,7 +32,6 @@ If using PC:
 
 ---------------------
 
-To search for VRML team stats from username run: python gui.py *or* python vrmlplayersearcher.py
 
 
 **Thankyou to Silveridge for all your help  <33**
