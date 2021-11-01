@@ -4,14 +4,14 @@ Displays Team Name, Team Rank (Worldwide), and tier of all the players in your p
 
 ---------------------
 
-**GUI WIP: Only username search works**
+**GUI WIP: Username search works & pub name searches only partially works**
 
-**(for now use pubstats.py for pub name searching)**
+**(Pub name search output is display in cli)**
 
-To use GUI:
+To setup GUI:
 1. Install pip (https://www.liquidweb.com/kb/install-pip-windows/)
 2. pip install -r requirements.txt (in base directory)
-3. python gui.py
+3. python gui.py **OR** double click Run-GUI.bat
 
 ---------------------
 
