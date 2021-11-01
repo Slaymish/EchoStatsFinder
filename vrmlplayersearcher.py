@@ -1,72 +1,63 @@
 import requests
 import json
 
-def main():
-    url = 'https://api.vrmasterleague.com/'
 
+class Main():
+    def __init__(self, url, username):
+        self.url = url
+        self.username = username
+    
+    def createRequest(self):
+        # Query all teams, with their rosters
+        url_request = requests.get(self.url + "/EchoArena/Players")
 
-    username = input('Username: ')
+        raw_data = url_request.text # All data from query (THIS IS A STRING RN)
 
-    """
-    # Test Connection to API
-    url_request = requests.get(url)
+        # Convert string into list
+        self.data_list = json.loads(raw_data) # This is a list
+    
+    def filterRequest(self):
+        self.found_team = None
 
-    if url_request:
-        # Display Connection
-        print("Sucesfully Connected (" + str(url_request.status_code) + ")")
-    else:
-        # Display Error message
-        print("Error: " + str(url_request.status_code))
+        # Will go through all items in list
+        for i in range(0, len(self.data_list)): 
+            test_data = self.data_list[i]
+            players = test_data['players'] # This is a list
+            
+            # Go through list of players
+            for j in range(0, len(players)):
+                individual_player = players[j] # This is a dict
+                temp_name = individual_player['name']
 
-    """
+                if temp_name == self.username: # If username found
+                    self.found_team = True
+                    self.found_data = test_data
+                    break
+    
+    def outputResults(self):
+        # If team is found
+        if self.found_team != None:
+            team_name = self.found_data['name']
+            team_id = self.found_data['id']
+            print("Team: " + team_name) # Display team name
 
-    # Query all teams, with their rosters
-    url_request = requests.get(url + "/EchoArena/Players")
+            url_request = requests.get(self.url + "Teams/" + team_id)
 
-    raw_data = url_request.text # All data from query (THIS IS A STRING RN)
+            data = url_request.text
+            team_info = json.loads(data)
+            ranking = team_info['rankWorldwide']
+            tier = team_info['division']
 
-    # Convert string into list
-    data_list = json.loads(raw_data) # This is a list
-    found_team = None
+            print("Worldwide Rank: " + str(ranking)) # Display ranking
+            print("Tier: " + tier) # Display tier
+            print('')
 
-    # Will go through all items in list
-    for i in range(0, len(data_list)): 
-        test_data = data_list[i]
-        players = test_data['players'] # This is a list
-        
-        # Go through list of players
-        for j in range(0, len(players)):
-            individual_player = players[j] # This is a dict
-            temp_name = individual_player['name']
+            
+        else:
+            print('No team found')
 
-            if temp_name == username: # If username found
-                found_team = True
-                found_data = test_data
-                break
-
-
-    # If team is found
-    if found_team != None:
-        team_name = found_data['name']
-        team_id = found_data['id']
-        print("Team: " + team_name) # Display team name
-
-        url_request = requests.get(url + "Teams/" + team_id)
-
-        data = url_request.text
-        team_info = json.loads(data)
-        ranking = team_info['rankWorldwide']
-        tier = team_info['division']
-
-        print("Worldwide Rank: " + str(ranking)) # Display ranking
-        print("Tier: " + tier) # Display tier
-        print('')
-        # Loop
-        main()
-
-        
-    else:
-        print('No team found')
-        main()
-
-main()
+### Comment out the following if using as a library
+main = Main('https://api.vrmasterleague.com/', "<Username Here>")
+main.createRequest()
+main.filterRequest()
+main.outputResults()
