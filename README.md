@@ -1,5 +1,7 @@
 # VRMLPlayerSearch
 
+**CLI only rn, might do GUI later if I can be bothered**
+
 Displays Team Name, Team Rank (Worldwide), and tier of all the players in your pubs.
 
 If using quest:
