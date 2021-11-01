@@ -102,9 +102,10 @@ class Ui_Widget(object):
         self.label_7.setFont(font)
         self.label_7.setObjectName("label_7")
 
-        self.usernameInput_2 = QtWidgets.QTextEdit(Widget)
-        self.usernameInput_2.setGeometry(QtCore.QRect(10, 60, 101, 31))
-        self.usernameInput_2.setObjectName("usernameInput_2")
+        # IP input
+        self.IpInput = QtWidgets.QTextEdit(Widget)
+        self.IpInput.setGeometry(QtCore.QRect(10, 60, 101, 31))
+        self.IpInput.setObjectName("IpInput")
 
         self.label_8 = QtWidgets.QLabel(Widget)
         self.label_8.setGeometry(QtCore.QRect(90, 40, 101, 16))
@@ -114,6 +115,8 @@ class Ui_Widget(object):
         self.searchButton_2.setGeometry(QtCore.QRect(10, 100, 101, 21))
         self.searchButton_2.setFlat(False)
         self.searchButton_2.setObjectName("searchButton_2")
+        self.searchButton_2.clicked.connect(self.searchPub)
+
 
         self.label_9 = QtWidgets.QLabel(Widget)
         self.label_9.setGeometry(QtCore.QRect(160, 70, 91, 16))
@@ -176,6 +179,66 @@ class Ui_Widget(object):
             self.foundDivision = str(results[2])
 
             self.retranslateUi(Widget)
+
+    def searchPub(self):
+        #print("Search pub clicked")
+
+        # If nothing entered
+        if self.IpInput.toPlainText() == None or self.IpInput.toPlainText() == '':
+            # Set ip to pc 
+            self.userIP = '127.0.0.1'
+        else:
+            # otherwise use quest
+            self.userIP = self.IpInput.toPlainText()
+
+        # Get list of players names from echo session
+        self.getNames()
+
+        # To test without echo open (comment out when using properly)
+        #self.playerList = ['Slaymish','Rosh-','Silveridge','00JayWalker00']
+
+        for i in range(0, len(self.playerList)):
+            main = Main('https://api.vrmasterleague.com/', str(self.playerList[i]))
+            results = main.completeSearch()
+            print(self.playerList[i] + ': ' + str(results)) # Display in CLI
+
+
+
+
+    def getNames(self):
+        self.playerList = []
+        print("IP used: " + self.userIP)
+
+        try:
+            #url_request = requests.get('http://' + ip + ':' + port + '/session', timeout=5)
+            echo_url = 'http://' + self.userIP + ':6721/session'
+            url_request = requests.get(echo_url, timeout=5)
+
+        except:
+            print("Could not connect to session - Ensure echo is open")
+            stop = True
+    
+        if not stop:
+            print('')
+            if url_request.status_code:
+                data = url_request.text # String
+                echo_data = json.loads(data) # Dict
+
+                #teams[].players    # An array of objects containing data used to instantiate the team's players.
+                    
+
+                teams_data = echo_data['teams']
+
+                for i in range(0,len(teams_data)-1):
+                    per_team = teams_data[i]
+                    per_team_players = per_team['players']
+
+                    for j in range(0,len(per_team_players)):
+                        temp_player = per_team_players[j]
+                        self.playerList.append(temp_player['name']) # Add name to list
+                
+            else:
+                print("Error connecting to echo api (" + url_request.status_code + "). Ensure the ip is correct")
 
 
 
