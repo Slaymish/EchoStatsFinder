@@ -15,10 +15,11 @@ class Main():
 
         # Convert string into list
         self.data_list = json.loads(raw_data) # This is a list
-        try:
-            self.progressBar.setProperty("value", 10)
-        except:
-            print("No Progress Bar")
+        if self.barHere:
+            try:
+                self.progressBar.setProperty("value", 10)
+            except:
+                print("No Progress Bar")
     
     def filterRequest(self):
         self.found_team = None
@@ -37,10 +38,11 @@ class Main():
                     self.found_team = True
                     self.found_data = test_data
                     break
-        try:
-            self.progressBar.setProperty("value", 70)
-        except:
-            print("No Progress Bar")
+        if self.barHere:
+            try:
+                self.progressBar.setProperty("value", 70)
+            except:
+                print("No Progress Bar")
     
     def outputResults(self):
         # If team is found
@@ -48,10 +50,11 @@ class Main():
             team_name = self.found_data['name']
             team_id = self.found_data['id']
             #print("Team: " + team_name) # Display team name
-            try:
-                self.progressBar.setProperty("value", 80)
-            except:
-                print("No Progress Bar")
+            if self.barHere:
+                try:
+                    self.progressBar.setProperty("value", 80)
+                except:
+                    print("No Progress Bar")
 
             url_request = requests.get(self.url + "Teams/" + team_id)
 
@@ -59,35 +62,40 @@ class Main():
             team_info = json.loads(data)
             ranking = team_info['rankWorldwide']
             tier = team_info['division']
-            try:
-                self.progressBar.setProperty("value", 90)
-            except:
-                print("No Progress Bar")
+
+            if self.barHere:
+                try:
+                    self.progressBar.setProperty("value", 90)
+                except:
+                    print("No Progress Bar")
 
             #print("Worldwide Rank: " + str(ranking)) # Display ranking
             #print("Tier: " + tier) # Display tier
             #print('')
-            try:
-                self.progressBar.setProperty("value", 100)
-            except:
-                print("No Progress Bar")
+                try:
+                    self.progressBar.setProperty("value", 100)
+                except:
+                    print("No Progress Bar")
             return team_name, ranking, tier
 
             
         else:
-            try:
-                self.progressBar.setProperty("value", 100)
-            except:
-                print("No Progress Bar")
+            if self.barHere:
+                try:
+                    self.progressBar.setProperty("value", 100)
+                except:
+                    print("No Progress Bar")
             return "N/A", "N/A", "N/A"
     
     def completeSearch(self):
+        self.barHere = False
         self.createRequest()
         self.filterRequest()
         results = self.outputResults()
         return results
     
     def completeSearchWithGUI(self, progressBar):
+        self.barHere = True
         self.progressBar = progressBar
         self.progressBar.setProperty("value", 0)
         self.currentProgress = 0
