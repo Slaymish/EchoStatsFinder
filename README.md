@@ -1,5 +1,7 @@
 # VRML Team Stat Searcher
 
+**Thankyou to Silveridge for all your help  <33**
+
 Displays Team Name, Team Rank (Worldwide), and tier of all the players in your pubs.
 
 ---------------------
@@ -31,10 +33,6 @@ If using PC:
  - Have api on in echo settings
 
 ---------------------
-
-
-
-**Thankyou to Silveridge for all your help  <33**
 
 If anythings broken or you have questions,
 Dm me on discord (Slaymish#5702)
