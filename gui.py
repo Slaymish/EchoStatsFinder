@@ -113,7 +113,7 @@ class Ui_Widget(object):
 
         # Progress bar (Playersearcher)
         self.progressBar = QtWidgets.QProgressBar(Widget)
-        self.progressBar.setGeometry(QtCore.QRect(228, 555, 101, 23))
+        self.progressBar.setGeometry(QtCore.QRect(243, 560, 101, 23))
         self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
 
@@ -221,7 +221,7 @@ class Ui_Widget(object):
 
         # 'Leave blank for pc' label
         self.label_8 = QtWidgets.QLabel(Widget)
-        self.label_8.setGeometry(QtCore.QRect(90, 40, 130, 16))
+        self.label_8.setGeometry(QtCore.QRect(110, 40, 130, 16))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.label_8.setFont(font)
@@ -360,6 +360,7 @@ class Ui_Widget(object):
 
     def getNames(self):
         self.playerList = []
+        stop = False
         try:
             #url_request = requests.get('http://' + ip + ':' + port + '/session', timeout=5)
             echo_url = 'http://' + self.userIP + ':6721/session'
