@@ -19,6 +19,7 @@ class VRMLMain():
             self.progressBar.setProperty("value", 10)
         except:
             pass
+
     
     def filterRequest(self):
         self.found_team = None
@@ -36,11 +37,13 @@ class VRMLMain():
                 if temp_name == self.username: # If username found
                     self.found_team = True
                     self.found_data = test_data
+
                     pass
         try:
             self.progressBar.setProperty("value", 70)
         except:
             pass
+
     
     def outputResults(self):
         # If team is found
@@ -48,10 +51,12 @@ class VRMLMain():
             team_name = self.found_data['name']
             team_id = self.found_data['id']
             #print("Team: " + team_name) # Display team name
+
             try:
                 self.progressBar.setProperty("value", 80)
             except:
                 pass
+
 
             url_request = requests.get(self.url + "Teams/" + team_id)
 
@@ -59,22 +64,27 @@ class VRMLMain():
             team_info = json.loads(data)
             ranking = team_info['rankWorldwide']
             tier = team_info['division']
+
             try:
                 self.progressBar.setProperty("value", 90)
             except:
                 pass
 
+
             #print("Worldwide Rank: " + str(ranking)) # Display ranking
             #print("Tier: " + tier) # Display tier
             #print('')
+
             try:
                 self.progressBar.setProperty("value", 100)
             except:
                 pass
+
             return team_name, ranking, tier
 
             
         else:
+
             try:
                 self.progressBar.setProperty("value", 100)
             except:
@@ -83,6 +93,7 @@ class VRMLMain():
     
     def completeSearch(self):
         print("Complete Search called")
+
         self.createRequest()
         self.filterRequest()
         results = self.outputResults()
@@ -90,6 +101,7 @@ class VRMLMain():
         return results
     
     def completeSearchWithGUI(self, progressBar):
+        self.barHere = True
         self.progressBar = progressBar
         self.progressBar.setProperty("value", 0)
         self.currentProgress = 0

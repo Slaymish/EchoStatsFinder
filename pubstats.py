@@ -22,6 +22,7 @@ class PubMain():
             #teams[].players    # An array of objects containing data used to instantiate the team's players.
                 
 
+
             teams_data = echo_data['teams']
 
             for i in range(0,len(teams_data)-1):
@@ -57,3 +58,4 @@ class PubMain():
 
 #main = PubMain("127.0.0.1","6721")
 #main.completeSearch()
+
