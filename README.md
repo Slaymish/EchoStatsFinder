@@ -13,7 +13,7 @@ Thanks Silver :)
 To setup GUI:
 1. Install pip (https://www.liquidweb.com/kb/install-pip-windows/)
 2. pip install -r requirements.txt (in base directory)
-3. run the .exe or 'python gui.py'
+3. run the .exe
 
 ---------------------
 
@@ -26,6 +26,7 @@ If using quest:
  - Put your quest's ip into the ip input
  - Ensure you have API turned on in settings
  - Make sure you are on the same network as your quest
+
 
 If using PC:
  - Keep ip input blank
