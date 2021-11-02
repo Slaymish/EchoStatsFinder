@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-class Main():
+class VRMLMain():
     def __init__(self, url, username):
         self.url = url
         self.username = username
@@ -15,11 +15,11 @@ class Main():
 
         # Convert string into list
         self.data_list = json.loads(raw_data) # This is a list
-        if self.barHere:
-            try:
-                self.progressBar.setProperty("value", 10)
-            except:
-                print("No Progress Bar")
+        try:
+            self.progressBar.setProperty("value", 10)
+        except:
+            pass
+
     
     def filterRequest(self):
         self.found_team = None
@@ -37,12 +37,13 @@ class Main():
                 if temp_name == self.username: # If username found
                     self.found_team = True
                     self.found_data = test_data
-                    break
-        if self.barHere:
-            try:
-                self.progressBar.setProperty("value", 70)
-            except:
-                print("No Progress Bar")
+
+                    pass
+        try:
+            self.progressBar.setProperty("value", 70)
+        except:
+            pass
+
     
     def outputResults(self):
         # If team is found
@@ -50,11 +51,12 @@ class Main():
             team_name = self.found_data['name']
             team_id = self.found_data['id']
             #print("Team: " + team_name) # Display team name
-            if self.barHere:
-                try:
-                    self.progressBar.setProperty("value", 80)
-                except:
-                    print("No Progress Bar")
+
+            try:
+                self.progressBar.setProperty("value", 80)
+            except:
+                pass
+
 
             url_request = requests.get(self.url + "Teams/" + team_id)
 
@@ -63,35 +65,39 @@ class Main():
             ranking = team_info['rankWorldwide']
             tier = team_info['division']
 
-            if self.barHere:
-                try:
-                    self.progressBar.setProperty("value", 90)
-                except:
-                    print("No Progress Bar")
+            try:
+                self.progressBar.setProperty("value", 90)
+            except:
+                pass
+
 
             #print("Worldwide Rank: " + str(ranking)) # Display ranking
             #print("Tier: " + tier) # Display tier
             #print('')
-                try:
-                    self.progressBar.setProperty("value", 100)
-                except:
-                    print("No Progress Bar")
+
+            try:
+                self.progressBar.setProperty("value", 100)
+            except:
+                pass
+
             return team_name, ranking, tier
 
             
         else:
-            if self.barHere:
-                try:
-                    self.progressBar.setProperty("value", 100)
-                except:
-                    print("No Progress Bar")
+
+            try:
+                self.progressBar.setProperty("value", 100)
+            except:
+                pass
             return "N/A", "N/A", "N/A"
     
     def completeSearch(self):
-        self.barHere = False
+        print("Complete Search called")
+
         self.createRequest()
         self.filterRequest()
         results = self.outputResults()
+        print("Complete Search Complete")
         return results
     
     def completeSearchWithGUI(self, progressBar):
