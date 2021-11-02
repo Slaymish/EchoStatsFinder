@@ -2,7 +2,7 @@ import requests
 import json
 import time
 
-class Main():
+class VRMLMain():
     def __init__(self, url, username):
         self.url = url
         self.username = username
@@ -18,7 +18,7 @@ class Main():
         try:
             self.progressBar.setProperty("value", 10)
         except:
-            print("No Progress Bar")
+            pass
     
     def filterRequest(self):
         self.found_team = None
@@ -36,11 +36,11 @@ class Main():
                 if temp_name == self.username: # If username found
                     self.found_team = True
                     self.found_data = test_data
-                    break
+                    pass
         try:
             self.progressBar.setProperty("value", 70)
         except:
-            print("No Progress Bar")
+            pass
     
     def outputResults(self):
         # If team is found
@@ -51,7 +51,7 @@ class Main():
             try:
                 self.progressBar.setProperty("value", 80)
             except:
-                print("No Progress Bar")
+                pass
 
             url_request = requests.get(self.url + "Teams/" + team_id)
 
@@ -62,7 +62,7 @@ class Main():
             try:
                 self.progressBar.setProperty("value", 90)
             except:
-                print("No Progress Bar")
+                pass
 
             #print("Worldwide Rank: " + str(ranking)) # Display ranking
             #print("Tier: " + tier) # Display tier
@@ -70,7 +70,7 @@ class Main():
             try:
                 self.progressBar.setProperty("value", 100)
             except:
-                print("No Progress Bar")
+                pass
             return team_name, ranking, tier
 
             
@@ -78,13 +78,15 @@ class Main():
             try:
                 self.progressBar.setProperty("value", 100)
             except:
-                print("No Progress Bar")
+                pass
             return "N/A", "N/A", "N/A"
     
     def completeSearch(self):
+        print("Complete Search called")
         self.createRequest()
         self.filterRequest()
         results = self.outputResults()
+        print("Complete Search Complete")
         return results
     
     def completeSearchWithGUI(self, progressBar):
