@@ -1,20 +1,21 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QRunnable, pyqtSignal, pyqtSlot, QThreadPool, QObject
-from PyQt5.QtWidgets import QMessageBox, QComboBox  
+from PyQt5.QtWidgets import QMessageBox
 import sys
 from vrmlplayersearcher import *
-from pubstats import *
-import threading
 
 
 class Ui_Widget(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
-        Widget.resize(575, 300)
+        Widget.resize(575, 600)
+        
+        # Top line
+        self.line_3 = QtWidgets.QFrame(Widget)
+        self.line_3.setGeometry(QtCore.QRect(0, 90, 575, 21))
+        self.line_3.setFrameShape(QtWidgets.QFrame.HLine)
+        self.line_3.setFrameShadow(QtWidgets.QFrame.Sunken)
+        self.line_3.setObjectName("line_3")
 
-  
-
- 
 
         # Centre line
         self.line = QtWidgets.QFrame(Widget)
@@ -195,123 +196,75 @@ class Ui_Widget(object):
         self.lplayer8.setObjectName("lplayer8")
         
 
-        ### Unlabelled UI Elements, not completed yet!
-        self.pubStatsTitle = QtWidgets.QLabel(Widget)
-        self.pubStatsTitle.setGeometry(QtCore.QRect(10, 0, 201, 41))
+        ### For Pubs stats, not completed yet!
 
+        # Player pub stats label
+        self.label_6 = QtWidgets.QLabel(Widget)
+        self.label_6.setGeometry(QtCore.QRect(20, 0, 201, 41))
         font = QtGui.QFont()
         font.setPointSize(20)
-        self.pubStatsTitle.setFont(font)
-        self.pubStatsTitle.setObjectName("pubStatsTitle")
+        self.label_6.setFont(font)
+        self.label_6.setObjectName("label_6")
 
-
-        self.ipLabel = QtWidgets.QLabel(Widget)
-        self.ipLabel.setGeometry(QtCore.QRect(10, 40, 81, 16))
-
+        # IP address label
+        self.label_7 = QtWidgets.QLabel(Widget)
+        self.label_7.setGeometry(QtCore.QRect(20, 40, 81, 16))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.ipLabel.setFont(font)
-        self.ipLabel.setObjectName("ipLabel")
+        self.label_7.setFont(font)
+        self.label_7.setObjectName("label_7")
 
+        # IP input
+        self.IpInput = QtWidgets.QTextEdit(Widget)
+        self.IpInput.setGeometry(QtCore.QRect(20, 60, 140, 31))
+        self.IpInput.setObjectName("IpInput")
 
-        self.ipInput = QtWidgets.QTextEdit(Widget)
-        self.ipInput.setGeometry(QtCore.QRect(10, 80, 101, 31))
-        self.ipInput.setObjectName("IP Input 2")
-
-        self.exceptText = QtWidgets.QLabel(Widget)
-        self.exceptText.setGeometry(QtCore.QRect(10, 58, 101, 16))
-        self.exceptText.setObjectName("exceptText")
-
+        # 'Leave blank for pc' label
+        self.label_8 = QtWidgets.QLabel(Widget)
+        self.label_8.setGeometry(QtCore.QRect(110, 40, 130, 16))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_8.setFont(font)
+        self.label_8.setObjectName("label_8")
 
         # Pub search button
         self.searchButton_2 = QtWidgets.QPushButton(Widget)
-
-        self.searchButton_2.setGeometry(QtCore.QRect(10, 120, 101, 21))
+        self.searchButton_2.setGeometry(QtCore.QRect(370, 40, 115, 45))
         self.searchButton_2.setFlat(False)
         self.searchButton_2.setObjectName("searchButton_2")
-        self.searchButton_2.clicked.connect(self.searchForPubPlayer)
+        self.searchButton_2.clicked.connect(self.searchPub)
 
-        self.portLabel = QtWidgets.QLabel(Widget)
-        self.portLabel.setGeometry(QtCore.QRect(140, 40, 150, 16))
-        font = QtGui.QFont()
-        font.setPointSize(12)
-        self.portLabel.setFont(font)
-        self.portLabel.setObjectName("portLabel")
-
-        self.portInput = QtWidgets.QTextEdit(Widget)
-        self.portInput.setGeometry(QtCore.QRect(140, 80, 101, 31))
-        self.portInput.setObjectName("Port Input")
-
-        self.exceptText2 = QtWidgets.QLabel(Widget)
-        self.exceptText2.setGeometry(QtCore.QRect(140, 58, 101, 16))
-        self.exceptText2.setObjectName("exceptText2")
-
-        self.pubPlayers = QComboBox(Widget)
-        self.pubPlayers.setGeometry(QtCore.QRect(10,150, 100, 20))
-        self.pubPlayers.setObjectName("pubPlayers")
-        self.pubPlayers.currentTextChanged.connect(self.updatePubStatViewer)
-
-
-        self.pubTeamLabel = QtWidgets.QLabel(Widget)
-        self.pubTeamLabel.setGeometry(QtCore.QRect(10, 180, 71, 16))
-
+        """
+        # 'Current not' label
+        self.label_9 = QtWidgets.QLabel(Widget)
+        self.label_9.setGeometry(QtCore.QRect(220, 30, 115, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        self.pubTeamLabel.setFont(font)
-        self.pubTeamLabel.setObjectName("pubTeamLabel")
+        self.label_9.setFont(font)
+        self.label_9.setObjectName("label_9")
 
-        self.pubTeamName = QtWidgets.QLabel(Widget)
-        self.pubTeamName.setGeometry(QtCore.QRect(85, 180, 71, 16))
-        font = QtGui.QFont()
-        self.pubTeamName.setFont(font)
-        self.pubTeamName.setObjectName("pubTeamName")
-
-        self.pubRanking = QtWidgets.QLabel(Widget)
-        self.pubRanking.setGeometry(QtCore.QRect(110, 210, 101, 16))
-        font = QtGui.QFont()
-        self.pubRanking.setFont(font)
-        self.pubRanking.setObjectName("pubRanking")
-
-        self.pubrankingLabel = QtWidgets.QLabel(Widget)
-        self.pubrankingLabel.setGeometry(QtCore.QRect(10, 210, 101, 16))
-        font = QtGui.QFont()
-        font.setBold(True)
-        self.pubrankingLabel.setFont(font)
-        self.pubrankingLabel.setObjectName("pubrankingLabel")
-
-        self.pubDivision = QtWidgets.QLabel(Widget)
-        self.pubDivision.setGeometry(QtCore.QRect(10, 240, 51, 16))
-
+        # 'Finished yet' label
+        self.label_10 = QtWidgets.QLabel(Widget)
+        self.label_10.setGeometry(QtCore.QRect(220, 45, 110, 16))
         font = QtGui.QFont()
         font.setBold(True)
         font.setWeight(75)
-        self.pubDivision.setFont(font)
-        self.pubDivision.setObjectName("pubDivision")
-        
-        self.pubdivisionLabel = QtWidgets.QLabel(Widget)
-        self.pubdivisionLabel.setGeometry(QtCore.QRect(60, 240, 71, 16))
+        self.label_10.setFont(font)
+        self.label_10.setObjectName("label_10")
+
+        # '(Output in CLI)' label
+        self.label_11 = QtWidgets.QLabel(Widget)
+        self.label_11.setGeometry(QtCore.QRect(220, 60, 110, 16))
         font = QtGui.QFont()
-        self.pubdivisionLabel.setFont(font)
-        self.pubdivisionLabel.setObjectName("pubdivisionLabel")
-
-        ## pub progress bar
-        self.progressBar2 = QtWidgets.QProgressBar(Widget)
-        self.progressBar2.setGeometry(QtCore.QRect(10, 265, 101, 23))
-        self.progressBar2.setProperty("value", 0)
-        self.progressBar2.setObjectName("progressBar2")
-
-
-
-
-        self.foundTeamName = "..."
-        self.foundRanking = "..."
-        self.foundDivision = "..."
-
-        self.pubfoundTeamName = "..."
-        self.pubfoundRanking = "..."
-        self.pubfoundDivision = "..."
-
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_11.setFont(font)
+        self.label_11.setObjectName("label_11")
+        """
+        self.foundTeamName = ""
+        self.foundRanking = ""
+        self.foundDivision = ""
 
         self.player1 = ""
         self.player2 = ""
@@ -338,21 +291,26 @@ class Ui_Widget(object):
         self.divisionLabel.setText(_translate("Widget", f"{self.foundDivision}"))
         self.label_4.setText(_translate("Widget", "Worldwide Rank:"))
         self.label_5.setText(_translate("Widget", "Division:"))
-        self.pubStatsTitle.setText(_translate("Widget", "Player Pub Stats"))
-        self.ipLabel.setText(_translate("Widget", "IP Address"))
-        self.exceptText.setText(_translate("Widget", "(leave blank if on PC)"))
-        self.portLabel.setText(_translate("Widget", "Port Number"))
-        self.exceptText2.setText(_translate("Widget", "(leave blank if on PC)"))
+        self.label_6.setText(_translate("Widget", "Player Pub Stats"))
+        self.label_7.setText(_translate("Widget", "IP Address"))
+        self.label_8.setText(_translate("Widget", "(leave blank if on PC)"))
         self.searchButton_2.setText(_translate("Widget", "Begin Search"))
 
+        self.lplayer1.setText(_translate("Widget", f"{self.player1}"))
+        self.lplayer2.setText(_translate("Widget", f"{self.player2}"))
+        self.lplayer3.setText(_translate("Widget", f"{self.player3}"))
+        self.lplayer4.setText(_translate("Widget", f"{self.player4}"))
+        self.lplayer5.setText(_translate("Widget", f"{self.player5}"))
+        self.lplayer6.setText(_translate("Widget", f"{self.player6}"))
+        self.lplayer7.setText(_translate("Widget", f"{self.player7}"))
+        self.lplayer8.setText(_translate("Widget", f"{self.player8}"))
 
-        self.pubTeamLabel.setText(_translate("Widget", "Team Name: "))
-        self.pubTeamName.setText(_translate("Widget", f"{self.pubfoundTeamName}"))
-        self.pubRanking.setText(_translate("Widget", f"{self.pubfoundRanking}"))
-        self.pubdivisionLabel.setText(_translate("Widget", f"{self.pubfoundDivision}"))
-        self.pubrankingLabel.setText(_translate("Widget", "Worldwide Rank:"))
-        self.pubDivision.setText(_translate("Widget", "Division:"))
 
+        """
+        self.label_9.setText(_translate("Widget", "CURRENTLY NOT"))
+        self.label_10.setText(_translate("Widget", "FINISHED YET"))
+        self.label_11.setText(_translate("Widget", "(Outputs in CLI)"))
+        """
     
     def searchForVRMLPlayer(self):
         self.playerName = self.usernameInput.toPlainText()
@@ -364,103 +322,112 @@ class Ui_Widget(object):
             msgBox.setStandardButtons(QMessageBox.Ok)
             msgBox.exec()
         else:
-            main = VRMLMain('https://api.vrmasterleague.com/', str(self.playerName))
+            main = Main('https://api.vrmasterleague.com/', str(self.playerName))
             results = main.completeSearchWithGUI(self.progressBar)
+            print(results)
             self.foundTeamName = results[0]
             self.foundRanking = str(results[1])
             self.foundDivision = str(results[2])
 
             self.retranslateUi(Widget)
 
+    def searchPub(self):
+        #print("Search pub clicked")
 
-    def searchForPubPlayer(self):
-        #Get IP and Port
-        self.ip = self.ipInput.toPlainText()
-        self.port = self.portInput.toPlainText()
+        # If nothing entered
+        if self.IpInput.toPlainText() == None or self.IpInput.toPlainText() == '':
+            # Set ip to pc 
+            self.userIP = '127.0.0.1'
+        else:
+            # otherwise use quest
+            self.userIP = self.IpInput.toPlainText()
+
+        # Get list of players names from echo session
+        self.getNames()
+
+        # To test without echo open (comment out when using properly)
+        #self.playerList = ['Slaymish','Rosh-','Silveridge','00JayWalker00']
+
+        self.displayNames()
+
+        for i in range(0, len(self.playerList)):
+            main = Main('https://api.vrmasterleague.com/', str(self.playerList[i]))
+            results = main.completeSearch()
+            print(self.playerList[i] + ': ' + str(results)) # Display in CLI
 
 
-        #Check and fix ports
-        if len(self.ip.split(".")) != 4: ##Invalid or missing IP Address
-            self.ip = "127.0.0.1"
-        if (self.port == None) or (self.port == ""):
-            self.port = "6721"
-        
-        #Execute pub player finder scripts
-        #Multithreading to prevent freezing GUI
-        self.threadpool = QThreadPool()
-        self.pubBackground()
-        self.populatePubPlayers()
-    
-    def populatePubPlayers(self):
-        for name in self.names:
-            self.pubPlayers.addItem(name)
-        self.multithreadWorker = multithreadVRMLSearch(self.names)
-        self.multithreadWorker.signals.newValue.connect(self.updatePBarValue)
-        self.threadpool.start(self.multithreadWorker)
-        
-    def pubBackground(self):
-        nameFinder = PubMain(self.ip, self.port)
-        self.names = nameFinder.findNames()
-    
-    def updatePubStatViewer(self, value):
+
+
+    def getNames(self):
+        self.playerList = []
+        stop = False
         try:
-            nameIndex = self.multithreadWorker.names.index(value)
-            try:
-                foundStats = self.multithreadWorker.stats[nameIndex]
-                #foundStats[0] is team name
-                #foundStats[1] is global ranking
-                #foundStats[2] is tier
+            #url_request = requests.get('http://' + ip + ':' + port + '/session', timeout=5)
+            echo_url = 'http://' + self.userIP + ':6721/session'
+            url_request = requests.get(echo_url, timeout=4)
 
-                self.pubfoundTeamName = foundStats[0]
-                self.pubfoundRanking = foundStats[1]
-                self.pubfoundDivision = foundStats[2]
-                self.retranslateUi(Widget)
-            except Exception as e:
-                print("No stats available")
         except:
-            pass
+            msgBox = QMessageBox()
+            msgBox.setIcon(QMessageBox.Warning)
+            msgBox.setText("Could not connect to session")
+            msgBox.setWindowTitle("Ensure Echo is open and the IP is correct")
+            msgBox.setStandardButtons(QMessageBox.Ok)
+            msgBox.exec()
+            stop = True
     
-    def updatePBarValue(self, value):
-        self.progressBar2.setProperty("value", value)
+        if not stop:
+            print('')
+            if url_request.status_code:
+                data = url_request.text # String
+                echo_data = json.loads(data) # Dict
 
-class multithreadComms(QObject):
-    newValue = pyqtSignal(int)
+                #teams[].players    # An array of objects containing data used to instantiate the team's players.
+                    
 
-class multithreadVRMLSearch(QRunnable):
-    def __init__(self, names):
-        super(multithreadVRMLSearch, self).__init__()
-        self.names = names
-        self.stats = []
-        self.signals = multithreadComms()
+                teams_data = echo_data['teams']
 
-    @pyqtSlot()
-    def run(self):
-        vrmlInfo = VRMLMain("https://api.vrmasterleague.com/", "Placeholder")
-        individualStat = [] ##Temporary stat storage
+                for i in range(0,len(teams_data)-1):
+                    per_team = teams_data[i]
+                    per_team_players = per_team['players']
 
-        progressBarTotal = 0
-        self.signals.newValue.emit(0)
+                    for j in range(0,len(per_team_players)):
+                        temp_player = per_team_players[j]
+                        self.playerList.append(temp_player['name']) # Add name to list
+                
+            else:
+                print("Error connecting to echo api (" + url_request.status_code + "). Ensure the ip is correct")
 
-        # Gets number of segments for progress bar
-        progressBarSegment = 100/len(self.names)
+    def displayNames(self):
 
-        for name in self.names:
-            progressBarTotal += int(progressBarSegment)
-            self.signals.newValue.emit(progressBarTotal)
-            individualStat = []
-            vrmlInfo.username = name
-            res = vrmlInfo.completeSearch()
-            for stat in res: ## Convert stats from dictionary to array
-                individualStat.append(stat)
-            self.stats.append(individualStat)
-        self.signals.newValue.emit(100)
+        if len(self.playerList) > 0:
+            self.player1 = self.playerList[0]
+            if len(self.playerList) > 1:
+                self.player2 = self.playerList[1]
+                if len(self.playerList) > 2:
+                    self.player3 = self.playerList[2]
+                    if len(self.playerList) > 3:
+                        self.player4 = self.playerList[3]
+                        if len(self.playerList) > 4:
+                            self.player5 = self.playerList[4]
+                            if len(self.playerList) > 5:
+                                self.player6 = self.playerList[5]
+                                if len(self.playerList) > 6:
+                                    self.player7 = self.playerList[6]
+                                    if len(self.playerList) > 1:
+                                        self.player8 = self.playerList[7]
         
+        self.retranslateUi(Widget)
+
+
+
+
+
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     Widget = QtWidgets.QWidget()
     ui = Ui_Widget()
-
     ui.setupUi(Widget)
     Widget.show()
     sys.exit(app.exec_())
