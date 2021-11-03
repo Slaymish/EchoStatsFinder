@@ -1,19 +1,28 @@
 import requests
 import json
 from vrmlplayersearcher import *
+import certifi
+
+from PyInstaller.utils.hooks import collect_data_files ## Certificate verification to prevent compiled issues
+
+datas = collect_data_files('certifi')
+os.environ["REQUESTS_CA_BUNDLE"] = "certifi/cacert.pem"
+requests.utils.DEFAULT_CA_BUNDLE_PATH = "certifi/cacert.pem"
+requests.adapters.DEFAULT_CA_BUNDLE_PATH = "certifi/cacert.pem"
 
 class PubMain():
     def __init__(self, ip, port):
         self.ip = ip
         self.port = port
         self.player_names = []
+        self.cert = certifi.where()
     
     def resetVar(self):
         self.player_names = []
     
     def findNames(self):
         print("findNames called")
-        url_request = requests.get('http://' + self.ip + ':6721/session')
+        url_request = requests.get('http://' + self.ip + ':6721/session', cert=self.cert)
 
         if url_request.status_code:
             data = url_request.text # String

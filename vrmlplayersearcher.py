@@ -1,11 +1,23 @@
 import requests
+import requests.utils, requests.adapters
 import json
 import time
+import sys, os
+import certifi.core
+import certifi
+
+from PyInstaller.utils.hooks import collect_data_files ## Certificate verification to prevent compiled issues
+
+datas = collect_data_files('certifi')
+os.environ["REQUESTS_CA_BUNDLE"] = "certifi/cacert.pem"
+requests.utils.DEFAULT_CA_BUNDLE_PATH = "certifi/cacert.pem"
+requests.adapters.DEFAULT_CA_BUNDLE_PATH = "certifi/cacert.pem"
 
 class VRMLMain():
     def __init__(self, url, username):
         self.url = url
         self.username = username
+        
     
     def createRequest(self):
         # Query all teams, with their rosters
