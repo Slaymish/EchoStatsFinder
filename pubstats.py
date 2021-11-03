@@ -1,36 +1,37 @@
 import requests
 import json
+from vrmlplayersearcher import *
+import certifi
 
-with open('ip.txt') as f:
-    ip = f.readline()
-    port = f.readline()
 
-clean_ip = ip[:-1]
+## Fix Certificate Issues
+from PyInstaller.utils.hooks import collect_data_files ## Certificate verification to prevent compiled issues
 
-print('IP: ' + clean_ip)
-print('Port: ' + port)
+datas = collect_data_files('certifi')
+os.environ["REQUESTS_CA_BUNDLE"] = "certifi/cacert.pem"
+requests.utils.DEFAULT_CA_BUNDLE_PATH = "certifi/cacert.pem"
+requests.adapters.DEFAULT_CA_BUNDLE_PATH = "certifi/cacert.pem"
 
-player_names = []
-stop = False
-def find_names():
-    global stop
-    try:
-        #url_request = requests.get('http://' + ip + ':' + port + '/session', timeout=5)
-        echo_url = 'http://' + clean_ip + ':' + port + '/session'
-
-        url_request = requests.get(echo_url, timeout=5)
-    except:
-        print("Could not connect to session - Ensure echo is open")
-        stop = True
+class PubMain():
+    def __init__(self, ip, port):
+        self.ip = ip
+        self.port = port
+        self.player_names = []
     
-    if not stop:
-        print('')
+    def resetVar(self):
+        self.player_names = []
+    
+    def findNames(self):
+        #print("findNames called")
+        url_request = requests.get('http://' + self.ip + ':6721/session')
+
         if url_request.status_code:
             data = url_request.text # String
             echo_data = json.loads(data) # Dict
 
             #teams[].players    # An array of objects containing data used to instantiate the team's players.
                 
+
 
             teams_data = echo_data['teams']
 
@@ -40,82 +41,30 @@ def find_names():
 
                 for j in range(0,len(per_team_players)):
                     temp_player = per_team_players[j]
-                    player_names.append(temp_player['name']) # Add name to list
+                    self.player_names.append(temp_player['name']) # Add name to list
+            return self.player_names
             
         else:
             print("Error connecting to echo api (" + url_request.status_code + "). Ensure the ip is correct")
-
-
-def main(user):
-    global stop
-    url = 'https://api.vrmasterleague.com/'
     
-    username = user
-
-
-    try:
-        url_request = requests.get(url + "/EchoArena/Players",
-                            timeout=5)
-    except:
-        print("Could not connect to VRML API")
-        stop = True
-
-    if not stop:
-        raw_data = url_request.text # All data from query (THIS IS A STRING RN)
-
-        # Convert string into list
-        data_list = json.loads(raw_data) # This is a list
-        found_team = None
-
-        # Will go through all items in list
-        for i in range(0, len(data_list)): 
-            test_data = data_list[i]
-            players = test_data['players'] # This is a list
+    def getInfo(self):
+        try:
+            totalStats = []
+            for name in self.player_names:
+                main = VRMLMain('https://api.vrmasterleague.com/', name)
+                res = main.completeSearch()
+                totalStats.append(res)
+            return totalStats
             
-            # Go through list of players
-            for j in range(0, len(players)):
-                individual_player = players[j] # This is a dict
-                temp_name = individual_player['name']
+        except Exception as e:
+            print("Something went wrong. Likely no player names detected.")
 
-                if temp_name == username: # If username found
-                    found_team = True
-                    found_data = test_data
-                    break
+    def completeSearch(self):
+        self.resetVar()
+        self.findNames()
+        res = self.getInfo()
+        #print(res)
 
-
-        # If team is found
-        if found_team != None:
-            team_name = found_data['name']
-            team_id = found_data['id']
-            print("Team: " + team_name) # Display team name
-
-            url_request = requests.get(url + "Teams/" + team_id)
-
-            data = url_request.text
-            team_info = json.loads(data)
-            ranking = team_info['rankWorldwide']
-            tier = team_info['division']
-
-            print("Worldwide Rank: " + str(ranking)) # Display ranking
-            print("Tier: " + tier) # Display tier
-            print('')
-
-
-            
-        else:
-            print('No team found')
-            print('')
-
-def run():
-    find_names()
-    for i in range(0, len(player_names)):
-        print("Username: " + player_names[i])
-        main(player_names[i])
-
-
-
-run()
-
-
-# Slaymish was here xoxox
+#main = PubMain("127.0.0.1","6721")
+#main.completeSearch()
 
