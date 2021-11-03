@@ -263,15 +263,16 @@ class Ui_Widget(object):
         self.populatePubPlayers()
     
     def populatePubPlayers(self):
-        for name in self.names:
-            self.pubPlayers.addItem(name)
-        self.multithreadWorker = multithreadVRMLSearch(self.names)
-        self.multithreadWorker.signals.newValue.connect(self.updatePBarValue)
-        self.threadpool.start(self.multithreadWorker)
+        if self.nameFinder.success:
+            for name in self.names:
+                self.pubPlayers.addItem(name)
+            self.multithreadWorker = multithreadVRMLSearch(self.names)
+            self.multithreadWorker.signals.newValue.connect(self.updatePBarValue)
+            self.threadpool.start(self.multithreadWorker)
         
     def pubBackground(self):
-        nameFinder = PubMain(self.ip, self.port)
-        self.names = nameFinder.findNames()
+        self.nameFinder = PubMain(self.ip, self.port)
+        self.names = self.nameFinder.findNames()
     
     def updatePubStatViewer(self, value):
         try:
