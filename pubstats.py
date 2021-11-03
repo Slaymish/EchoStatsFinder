@@ -21,7 +21,7 @@ class PubMain():
         self.player_names = []
     
     def findNames(self):
-        print("findNames called")
+        #print("findNames called")
         url_request = requests.get('http://' + self.ip + ':6721/session')
 
         if url_request.status_code:
@@ -56,13 +56,12 @@ class PubMain():
             
         except Exception as e:
             print("Something went wrong. Likely no player names detected.")
-            print
 
     def completeSearch(self):
         self.resetVar()
         self.findNames()
         res = self.getInfo()
-        print(res)
+        #print(res)
 
 #main = PubMain("127.0.0.1","6721")
 #main.completeSearch()

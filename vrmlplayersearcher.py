@@ -94,11 +94,11 @@ class VRMLMain():
             return "N/A", "N/A", "N/A"
     
     def completeSearch(self):
-        print("Complete Search called")
+        #print("Complete Search called")
         self.createRequest()
         self.filterRequest()
         results = self.outputResults()
-        print("Complete Search Complete")
+        #print("Complete Search Complete")
         return results
     
     def completeSearchWithGUI(self, progressBar):
