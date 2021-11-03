@@ -22,7 +22,7 @@ class PubMain():
     
     def findNames(self):
         print("findNames called")
-        url_request = requests.get('http://' + self.ip + ':6721/session', cert=self.cert)
+        url_request = requests.get('http://' + self.ip + ':6721/session')
 
         if url_request.status_code:
             data = url_request.text # String
