@@ -17,7 +17,6 @@ class PubMain():
         self.ip = ip
         self.port = port
         self.player_names = []
-        self.cert = certifi.where()
     
     def resetVar(self):
         self.player_names = []
