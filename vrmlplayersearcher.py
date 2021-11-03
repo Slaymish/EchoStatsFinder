@@ -124,4 +124,3 @@ class VRMLMain():
 #main = Main('https://api.vrmasterleague.com/', "Silveridge")
 #main.createRequest()
 #main.filterRequest()
-#main.outputResults()
