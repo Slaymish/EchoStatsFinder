@@ -3,6 +3,8 @@ import json
 from vrmlplayersearcher import *
 import certifi
 
+
+## Fix Certificate Issues
 from PyInstaller.utils.hooks import collect_data_files ## Certificate verification to prevent compiled issues
 
 datas = collect_data_files('certifi')
