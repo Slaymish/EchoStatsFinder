@@ -44,11 +44,12 @@ class PubMain():
                     for j in range(0,len(per_team_players)):
                         temp_player = per_team_players[j]
                         self.player_names.append(temp_player['name']) # Add name to list
+
                 return self.player_names
                 
             else:
                 print("Error connecting to echo api (" + url_request.status_code + "). Ensure the ip is correct")
-        except:
+        except Exception as e:
             alert = QMessageBox()
             alert.setIcon(QMessageBox.Warning)
             alert.setText("Please enter a player name")
