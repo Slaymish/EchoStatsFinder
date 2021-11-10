@@ -4,16 +4,12 @@
 
 Displays Team Name, Team Rank (Worldwide), and tier of all the players in your pubs.
 
+(also has an included team searcher for players)
+
 ---------------------
 
 
-# GUI working (check releases)
-Thanks Silver :)
-
-To setup GUI:
-1. Install pip (https://www.liquidweb.com/kb/install-pip-windows/)
-2. pip install -r requirements.txt (in base directory)
-3. run the .exe
+# First release out now!
 
 ---------------------
 
@@ -34,5 +30,5 @@ If using PC:
 
 ---------------------
 
-If anythings broken or you have questions,
-Dm me on discord (Slaymish#5702)
+If anythings broken or you have any questions,
+Dm Slaymish#5702 or Silveridge#0001 on discord
