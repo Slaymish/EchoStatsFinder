@@ -2,16 +2,23 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QRunnable, pyqtSignal, pyqtSlot, QThreadPool, QObject
 from PyQt5.QtWidgets import QMessageBox, QComboBox  
 import sys
-from vrmlplayersearcher import *
-from pubstats import *
+from functions.base.vrmlplayersearcher import *
+from functions.base.pubstats import *
 import threading
-__version__ = "1.0.0"
+import re
+import webbrowser
+__version__ = "1.1.0"
+__beta__ = False
 
 
 class MainWindow(object):
     def setupUi(self, Widget):
         Widget.setObjectName("Widget")
         Widget.resize(451, 603)
+        
+        #Multithreading to prevent freezing GUI
+        self.threadpool = QThreadPool()
+
         self.line = QtWidgets.QFrame(Widget)
         self.line.setGeometry(QtCore.QRect(0, 120, 451, 20))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -242,11 +249,17 @@ class MainWindow(object):
         self.PlayerNameInput = QtWidgets.QPlainTextEdit(Widget)
         self.PlayerNameInput.setGeometry(QtCore.QRect(10, 540, 104, 41))
         self.PlayerNameInput.setObjectName("PlayerNameInput")
+
         
         self.vrmlSearchButton = QtWidgets.QPushButton(Widget)
         self.vrmlSearchButton.setGeometry(QtCore.QRect(120, 540, 81, 41))
         self.vrmlSearchButton.setObjectName("vrmlSearchButton")
         self.vrmlSearchButton.clicked.connect(self.searchForVRMLPlayer)
+
+        self.moreInfoVRML = QtWidgets.QPushButton(Widget)
+        self.moreInfoVRML.setGeometry(QtCore.QRect(380, 570, 60, 25))
+        self.moreInfoVRML.clicked.connect(self.loadMoreInfoVRML)
+
         
         self.vrmlRank = QtWidgets.QLabel(Widget)
         self.vrmlRank.setGeometry(QtCore.QRect(250, 540, 71, 16))
@@ -582,31 +595,76 @@ class MainWindow(object):
 
 
 
-
         self.foundTeamName = "..."
         self.foundRanking = "..."
         self.foundDivision = "..."
+        self.VRMLextraStats = []
 
         self.players = ["", "", "", "", "", "", "", ""]
         self.teams = ["", "", "", "", "", "", "", ""]
         self.ranks = ["", "", "", "", "", "", "", ""]
         self.tiers = ["", "", "", "", "", "", "", ""]
 
+        self.extraStats = [[],[],[],[],[],[],[],[]]
+
+        ### More Info Buttons
+        self.moreInfo1 = QtWidgets.QPushButton(Widget)
+        self.moreInfo1.setGeometry(QtCore.QRect(10, 180, 60, 25))
+        self.moreInfo1.clicked.connect(lambda: self.loadMoreInfo(self.players[0]))
+
+        self.moreInfo2 = QtWidgets.QPushButton(Widget)
+        self.moreInfo2.setGeometry(QtCore.QRect(10 + 225, 180, 60, 25))
+        self.moreInfo2.clicked.connect(lambda: self.loadMoreInfo(self.players[1]))
+
+        self.moreInfo3 = QtWidgets.QPushButton(Widget)
+        self.moreInfo3.setGeometry(QtCore.QRect(10, 180 + 80, 60, 25))
+        self.moreInfo3.clicked.connect(lambda: self.loadMoreInfo(self.players[2]))
+
+        self.moreInfo4 = QtWidgets.QPushButton(Widget)
+        self.moreInfo4.setGeometry(QtCore.QRect(10+225, 180 + 80, 60, 25))
+        self.moreInfo4.clicked.connect(lambda: self.loadMoreInfo(self.players[3]))
+
+        self.moreInfo5 = QtWidgets.QPushButton(Widget)
+        self.moreInfo5.setGeometry(QtCore.QRect(10, 180 + 160, 60, 25))
+        self.moreInfo5.clicked.connect(lambda: self.loadMoreInfo(self.players[4]))
+
+        self.moreInfo6 = QtWidgets.QPushButton(Widget)
+        self.moreInfo6.setGeometry(QtCore.QRect(10 + 225, 180 + 160, 60, 25))
+        self.moreInfo6.clicked.connect(lambda: self.loadMoreInfo(self.players[5]))
+
+        self.moreInfo7 = QtWidgets.QPushButton(Widget)
+        self.moreInfo7.setGeometry(QtCore.QRect(10, 180 + 240, 60, 25))
+        self.moreInfo7.clicked.connect(lambda: self.loadMoreInfo(self.players[6]))
+
+        self.moreInfo8 = QtWidgets.QPushButton(Widget)
+        self.moreInfo8.setGeometry(QtCore.QRect(10+225, 180 + 240, 60, 25))
+        self.moreInfo8.clicked.connect(lambda: self.loadMoreInfo(self.players[7]))
+
+        self.moreInfoButtons = [self.moreInfo1, self.moreInfo2, self.moreInfo3, self.moreInfo4, self.moreInfo5, self.moreInfo6, self.moreInfo7, self.moreInfo8]
+
+
+        ### Update System
+        self.updateButton = QtWidgets.QPushButton(Widget)
+        self.updateButton.setGeometry(QtCore.QRect(320, 10, 125, 25))
+        self.updateButton.clicked.connect(self.update)
+        self.threadpool.start(self.checkForUpdate)
+
         self.retranslateUi(Widget)
         QtCore.QMetaObject.connectSlotsByName(Widget)
         
 
     def retranslateUi(self, Widget):
-        print("Retranslating UI")
         _translate = QtCore.QCoreApplication.translate
         Widget.setWindowTitle(_translate("Widget", "Widget"))
         self.PubTitle.setText(_translate("Widget", "Pub Player Search"))
         self.VRMLTitle.setText(_translate("Widget", "VRML Player Search"))
         self.pubSearchButton.setText(_translate("Widget", "Get Player Stats"))
+        
         self.ipLabel.setText(_translate("Widget", "IP Address"))
         self.portLabel.setText(_translate("Widget", "Port Number"))
         self.ipLabel_2.setText(_translate("Widget", "(Leave blank if on PC)"))
         self.ipLabel_3.setText(_translate("Widget", "(Leave blank if on PC)"))
+        
         self.playerTitle_1.setText(_translate("Widget", "Player"))
         self.playerTitle_2.setText(_translate("Widget", "Player"))
         self.playerTitle_3.setText(_translate("Widget", "Player"))
@@ -615,15 +673,19 @@ class MainWindow(object):
         self.playerTitle_6.setText(_translate("Widget", "Player"))
         self.playerTitle_7.setText(_translate("Widget", "Player"))
         self.playerTitle_8.setText(_translate("Widget", "Player"))
+        
         self.teamlabel_1.setText(_translate("Widget", "Team: "))
         self.workRank_1.setText(_translate("Widget", "World Rank:"))
         self.tier_1.setText(_translate("Widget", "Tier:"))
+        
         self.vrmlPlayerTitle.setText(_translate("Widget", "Player Name"))
-        self.vrmlSearchButton.setText(_translate("Widget", "Search VRML\n"
-"Database"))
+
+        self.vrmlSearchButton.setText(_translate("Widget", "Search VRML\n" "Database"))
+        
         self.vrmlRank.setText(_translate("Widget", "World Rank:"))
         self.vrmlTeam.setText(_translate("Widget", "Team: "))
         self.vrmlTier.setText(_translate("Widget", "Tier:"))
+        
         self.teamL_1.setText(_translate("Widget", f"{self.teams[0]}"))
         self.rank_1.setText(_translate("Widget", f"{self.ranks[0]}"))
         self.tierL_1.setText(_translate("Widget", f"{self.tiers[0]}"))
@@ -669,8 +731,9 @@ class MainWindow(object):
         self.tierL_8.setText(_translate("Widget", f"{self.tiers[7]}"))
         self.tier_8.setText(_translate("Widget", "Tier:"))
         self.workRank_8.setText(_translate("Widget", "World Rank:"))
+        
         self.playerL_1.setText(_translate("Widget", f"{self.players[0]}"))
-        self.playerL_2.setText(_translate("Widget", "..."))
+        self.playerL_2.setText(_translate("Widget", ""))
         self.playerL_3.setText(_translate("Widget", f"{self.players[1]}"))
         self.playerL_4.setText(_translate("Widget", f"{self.players[2]}"))
         self.playerL_5.setText(_translate("Widget", f"{self.players[3]}"))
@@ -678,9 +741,33 @@ class MainWindow(object):
         self.playerL_7.setText(_translate("Widget", f"{self.players[5]}"))
         self.playerL_8.setText(_translate("Widget", f"{self.players[6]}"))
         self.playerL_9.setText(_translate("Widget", f"{self.players[7]}"))
+        
         self.teamVRML.setText(_translate("Widget", f"{self.foundTeamName}"))
         self.rankVRML.setText(_translate("Widget", f"{self.foundRanking}"))
         self.tierVRML.setText(_translate("Widget", f"{self.foundDivision}"))
+
+        self.moreInfo1.setText(_translate("Widget", "More Info"))
+        self.moreInfo2.setText(_translate("Widget", "More Info"))
+        self.moreInfo3.setText(_translate("Widget", "More Info"))
+        self.moreInfo4.setText(_translate("Widget", "More Info"))
+        self.moreInfo5.setText(_translate("Widget", "More Info"))
+        self.moreInfo6.setText(_translate("Widget", "More Info"))
+        self.moreInfo7.setText(_translate("Widget", "More Info"))
+        self.moreInfo8.setText(_translate("Widget", "More Info"))
+
+        self.moreInfoVRML.setText(_translate("Widget", "More Info"))
+
+        # Hide more info buttons
+        for index in range(0, len(self.moreInfoButtons)):
+            if self.tiers[index] == "" or self.tiers[index] == None or self.tiers[index] == "..." or self.players[index] == "...":
+                self.moreInfoButtons[index].hide()
+            else:
+                self.moreInfoButtons[index].show()
+        
+        if self.foundTeamName == "...":
+            self.moreInfoVRML.hide()
+        else:
+            self.moreInfoVRML.show()
     
     def searchForVRMLPlayer(self):
         self.playerName = self.PlayerNameInput.toPlainText()
@@ -691,17 +778,20 @@ class MainWindow(object):
             msgBox.setWindowTitle("No Player Entered")
             msgBox.setStandardButtons(QMessageBox.Ok)
             msgBox.exec()
-        else:
+        else: 
             main = VRMLMain('https://api.vrmasterleague.com/', str(self.playerName))
             results = main.completeSearch()
             self.foundTeamName = results[0]
             self.foundRanking = str(results[1])
             self.foundDivision = str(results[2])
-
+            self.VRMLextraStats = results[3]
             self.retranslateUi(Widget)
 
-
     def searchForPubPlayer(self):
+        
+        self.pubSearchButton.setDisabled(True)
+        self.clearPubStats()
+
         #Get IP and Port
         self.ip = self.ipInput.toPlainText()
         self.port = self.portInput.toPlainText()
@@ -716,17 +806,31 @@ class MainWindow(object):
             print("Empty or Invalid Port, using default")
         
         #Execute pub player finder scripts
-        #Multithreading to prevent freezing GUI
-        self.threadpool = QThreadPool()
         self.pubBackground()
         self.populatePubPlayers()
     
+    def clearPubStats(self):
+        ## CLEAR INFO TO PREVENT CROSS-OVER STATS
+        for i in range(0, len(self.players)):
+            self.players[i], self.teams[i], self.ranks[i], self.tiers[i] = "...", "...", "...", "..."
+        
+        self.retranslateUi(Widget)
+
+    def clearVRMLStats(self):
+
+        ## CLEAR INFO TO PREVENT CROSS-OVER STATS
+        self.foundDivision = "..."
+        self.foundRanking = "..."
+        self.foundTeamName = "..."
+        
+        self.retranslateUi(Widget)
+
     def populatePubPlayers(self):
         for i in range(0, len(self.names)):
             self.players[i] = self.names[i]
         for i in range(0, len(self.players)):
             if self.players[i] == "":
-                self.players[i] = "N/A"
+                self.players[i] = "..."
         self.multithreadWorker = multithreadVRMLSearch(self.players)
         self.threadpool.start(self.multithreadWorker)
         self.retranslateUi(Widget)
@@ -752,6 +856,78 @@ class MainWindow(object):
                 print("No stats available")
         except:
             pass
+
+    def loadMoreInfo(self, username):
+        index = self.players.index(username)
+        informationString = f"""
+        Player Name: {self.players[index]}\n
+        Team: {self.teams[index]}\n
+        Region: {self.extraStats[index][7]}\n
+        Division: {self.tiers[index]}\n
+        Team Worldwide Rank: {self.ranks[index]}\n
+        Team Region Rank: {self.extraStats[index][0]}\n
+        Team MMR: {self.extraStats[index][6]}\n
+        Team Games Played: {self.extraStats[index][1]}\n
+        Team Wins: {self.extraStats[index][2]}\n
+        Team Losses: {self.extraStats[index][4]}\n
+        Team Ties: {self.extraStats[index][3]}\n
+        Team Points: {self.extraStats[index][5]}\n
+        Is This Team Recruiting: {self.extraStats[index][8]}\n
+        """
+        alert = QMessageBox()
+        alert.setText(informationString)
+        alert.setWindowTitle("Extra Information")
+        alert.setStandardButtons(QMessageBox.Ok)
+        alert.exec()
+
+    def loadMoreInfoVRML(self):
+
+        informationString = f"""
+        Player Name: {self.playerName}\n
+        Team: {self.foundTeamName}\n
+        Region: {self.VRMLextraStats[7]}\n
+        Division: {self.foundDivision}\n
+        Team Worldwide Rank: {self.foundRanking}\n
+        Team Region Rank: {self.VRMLextraStats[0]}\n
+        Team MMR: {self.VRMLextraStats[6]}\n
+        Team Games Played: {self.VRMLextraStats[1]}\n
+        Team Wins: {self.VRMLextraStats[2]}\n
+        Team Losses: {self.VRMLextraStats[4]}\n
+        Team Ties: {self.VRMLextraStats[3]}\n
+        Team Points: {self.VRMLextraStats[5]}\n
+        Is This Team Recruiting: {self.VRMLextraStats[8]}\n
+        """
+        alert = QMessageBox()
+        alert.setText(informationString)
+        alert.setWindowTitle("Extra Information")
+        alert.setStandardButtons(QMessageBox.Ok)
+        alert.exec()
+
+    def update(self):
+        webbrowser.open("https://github.com/Slaymish/EchoStatsFinder/releases")
+    
+    def checkForUpdate(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.updateButton.setDisabled(True)
+        self.updateButton.setText(_translate("Widget", "Checking for update..."))
+
+        try:
+            r = requests.get("https://raw.githubusercontent.com/Slaymish/EchoStatsFinder/main/gui.py")
+
+            remoteVersion = str(re.findall('__version__ = "(.*)"', r.text)[0])
+            localVersion = __version__
+
+            if __beta__:
+                self.updateButton.setText(_translate("Widget", "Update Beta Version"))
+                self.updateButton.setDisabled(False)
+            else:
+                if remoteVersion != localVersion:
+                    self.updateButton.setDisabled(False)
+                    self.updateButton.setText(_translate("Widget", "Update Available!"))
+                else:
+                    self.updateButton.setText(_translate("Widget", "No update available"))
+        except Exception as e:
+            print("Update search failed, aborting.")
 
 class multithreadComms(QObject):
     newValue = pyqtSignal(int)
@@ -780,6 +956,9 @@ class multithreadVRMLSearch(QRunnable):
             ui.teams[i] = self.stats[i][0]
             ui.ranks[i] = self.stats[i][1]
             ui.tiers[i] = self.stats[i][2]
+            ui.extraStats[i] = self.stats[i][3]
+        
+        ui.pubSearchButton.setDisabled(False)
         ui.retranslateUi(Widget)
         
 
