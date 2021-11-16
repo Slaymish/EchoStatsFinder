@@ -5,6 +5,7 @@ import sys
 from vrmlplayersearcher import *
 from pubstats import *
 import threading
+__version__ = "1.0.0"
 
 
 class MainWindow(object):
