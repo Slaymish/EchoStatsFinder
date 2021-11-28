@@ -21,7 +21,7 @@ A project designed for players to search specific player's VRML statistics and p
 
 # Contributions and Acknowledgements
 ### Slaymish
-Performed important tasks involving project setup, networking and critical project testing.
+Performed important tasks involving project setup, networking, critical testing and structure.
 
 ### Silveridge
 Implemented GUI functionality and navigation.
