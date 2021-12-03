@@ -4,6 +4,7 @@ A project designed for players to search specific player's VRML statistics and p
 ### Future Upgrades
 - [ ] Integration with Ignite Database
 - [ ] Information Storing
+- [ ] Auto-search when in pub
 
 # Installation Process
 1. Go to the releases tab and download the latest version for your operating sytem (Note: currently Windows is the only supported operating system, other operating systems will be supported in the future)
